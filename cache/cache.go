@@ -10,13 +10,13 @@ type Servicer[T interface{}] interface {
 
 type Cache[T interface{}] struct {
 	service  Servicer[T]
-	dataLock sync.RWMutex
+	dataLock sync.Mutex
 	data     map[string]*T
 }
 
 func (c *Cache[T]) get(key string) (*T, bool) {
-	c.dataLock.RLock()
-	defer c.dataLock.RUnlock()
+	c.dataLock.Lock()
+	defer c.dataLock.Unlock()
 
 	user, ok := c.data[key]
 	return user, ok
